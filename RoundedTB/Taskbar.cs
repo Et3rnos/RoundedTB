@@ -138,7 +138,8 @@ namespace RoundedTB
         /// </summary>
         public static void ResetTaskbar(Types.Taskbar taskbar, Types.Settings settings)
         {
-            LocalPInvoke.SetWindowRgn(taskbar.TaskbarHwnd, IntPtr.Zero, true);
+            var rect = LocalPInvoke.CreateRoundRectRgn(0, 30, 1921, 91, 0, 0);
+            LocalPInvoke.SetWindowRgn(taskbar.TaskbarHwnd, rect, true);
             LocalPInvoke.SetLayeredWindowAttributes(taskbar.TaskbarHwnd, 0, 255, LocalPInvoke.LWA_ALPHA);
             int style = LocalPInvoke.GetWindowLong(taskbar.TaskbarHwnd, LocalPInvoke.GWL_EXSTYLE).ToInt32();
             if ((style & LocalPInvoke.WS_EX_LAYERED) == LocalPInvoke.WS_EX_LAYERED)
@@ -171,7 +172,7 @@ namespace RoundedTB
                 Types.EffectiveRegion taskbarEffectiveRegion = new Types.EffectiveRegion
                 {
                     CornerRadius = Convert.ToInt32(settings.SimpleTaskbarLayout.CornerRadius * taskbar.ScaleFactor),
-                    Top = Convert.ToInt32(settings.SimpleTaskbarLayout.MarginTop * taskbar.ScaleFactor),
+                    Top = Convert.ToInt32(settings.SimpleTaskbarLayout.MarginTop * taskbar.ScaleFactor) + 30,
                     Left = Convert.ToInt32(settings.SimpleTaskbarLayout.MarginLeft * taskbar.ScaleFactor),
                     Width = Convert.ToInt32(taskbar.TaskbarRect.Right - taskbar.TaskbarRect.Left - (settings.SimpleTaskbarLayout.MarginRight * taskbar.ScaleFactor)) + 1,
                     Height = Convert.ToInt32(taskbar.TaskbarRect.Bottom - taskbar.TaskbarRect.Top - (settings.SimpleTaskbarLayout.MarginBottom * taskbar.ScaleFactor)) + 1
@@ -257,7 +258,7 @@ namespace RoundedTB
                 {
                     mainRegion = LocalPInvoke.CreateRoundRectRgn(
                         centredDistanceFromEdge + centredEffectiveRegion.Left,
-                        centredEffectiveRegion.Top,
+                        centredEffectiveRegion.Top + 30,
                         centredEffectiveRegion.Width - centredDistanceFromEdge,
                         centredEffectiveRegion.Height,
                         centredEffectiveRegion.CornerRadius,
@@ -271,7 +272,7 @@ namespace RoundedTB
 
                     mainRegion = LocalPInvoke.CreateRoundRectRgn(
                         taskbarEffectiveRegion.Left,
-                        taskbarEffectiveRegion.Top,
+                        taskbarEffectiveRegion.Top + 30,
                         taskbarEffectiveRegion.Width - centredDistanceFromEdge,
                         taskbarEffectiveRegion.Height,
                         taskbarEffectiveRegion.CornerRadius,
@@ -284,7 +285,7 @@ namespace RoundedTB
                 {
                     IntPtr trayRegion = LocalPInvoke.CreateRoundRectRgn(
                         (taskbar.TrayRect.Left - taskbar.TaskbarRect.Left) - trayEffectiveRegion.Left,
-                        trayEffectiveRegion.Top,
+                        trayEffectiveRegion.Top + 30,
                         trayEffectiveRegion.Width,
                         trayEffectiveRegion.Height,
                         trayEffectiveRegion.CornerRadius,
@@ -299,7 +300,7 @@ namespace RoundedTB
                 {
                     IntPtr widgetsRegion = LocalPInvoke.CreateRoundRectRgn(
                         widgetsEffectiveRegion.Left,
-                        widgetsEffectiveRegion.Top,
+                        widgetsEffectiveRegion.Top + 30,
                         widgetsEffectiveRegion.Width,
                         widgetsEffectiveRegion.Height,
                         widgetsEffectiveRegion.CornerRadius,
